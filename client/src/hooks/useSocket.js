@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { io } from 'socket.io-client'
 
-export function useSocket() {
+export function useSocket(serverUrl = null) {
   const [socket, setSocket] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
   const [currentState, setCurrentState] = useState({
@@ -10,8 +10,15 @@ export function useSocket() {
   })
 
   useEffect(() => {
-    console.log('Initializing Socket.IO connection...')
-    const socketInstance = io('http://localhost:3001', {
+    if (!serverUrl) {
+      // サーバーURLが設定されていない場合は接続しない
+      setSocket(null)
+      setIsConnected(false)
+      return
+    }
+
+    console.log('Initializing Socket.IO connection to:', serverUrl)
+    const socketInstance = io(serverUrl, {
       transports: ['websocket', 'polling'],
       timeout: 5000,
       forceNew: true
@@ -55,7 +62,7 @@ export function useSocket() {
       clearTimeout(timeout)
       socketInstance.close()
     }
-  }, [])
+  }, [serverUrl])
 
   const setCurrent = (assetId) => {
     if (socket) {

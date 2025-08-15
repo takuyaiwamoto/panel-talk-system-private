@@ -3,10 +3,13 @@ import { useSocket } from '../hooks/useSocket'
 import { useAssets } from '../hooks/useAssets'
 import { usePlaylistOrder } from '../hooks/usePlaylistOrder'
 import DraggablePlaylistItem from '../components/DraggablePlaylistItem'
+import ServerSettings from '../components/ServerSettings'
 
 function ControllerPage() {
-  const { isConnected, currentState, setCurrent, play, pause } = useSocket()
-  const { playlist, loading, error, getAssetById, getThumbnailUrl } = useAssets()
+  const [serverUrl, setServerUrl] = useState(null)
+  
+  const { isConnected, currentState, setCurrent, play, pause } = useSocket(serverUrl)
+  const { playlist, loading, error, getAssetById, getThumbnailUrl } = useAssets(serverUrl)
   const { orderedPlaylist, reorderItems, resetOrder } = usePlaylistOrder(playlist)
   
   const [dragState, setDragState] = useState({
@@ -15,6 +18,10 @@ function ControllerPage() {
   })
 
   const currentAsset = currentState.currentAssetId ? getAssetById(currentState.currentAssetId) : null
+
+  const handleServerConnect = (url) => {
+    setServerUrl(url)
+  }
 
   const handleAssetClick = (assetId) => {
     setCurrent(assetId)
@@ -96,6 +103,8 @@ function ControllerPage() {
           </div>
         </div>
       </div>
+
+      <ServerSettings onConnect={handleServerConnect} isConnected={isConnected} />
 
       <div className="grid" style={{ gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
         <div className="card">
