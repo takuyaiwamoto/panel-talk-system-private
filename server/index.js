@@ -1,0 +1,97 @@
+import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    methods: ["GET", "POST"],
+    credentials: true
+  },
+  allowEIO3: true,
+  transports: ['websocket', 'polling']
+});
+
+const PORT = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+app.use('/assets', express.static(path.join(__dirname, '../assets')));
+
+let currentState = {
+  currentAssetId: null,
+  isPlaying: false
+};
+
+app.get('/api/assets', (req, res) => {
+  try {
+    const assetsPath = path.join(__dirname, '../data/assets.json');
+    const assetsData = JSON.parse(fs.readFileSync(assetsPath, 'utf8'));
+    res.json(assetsData);
+  } catch (error) {
+    console.error('Error reading assets:', error);
+    res.status(500).json({ error: 'Failed to load assets' });
+  }
+});
+
+app.get('/api/playlist', (req, res) => {
+  try {
+    const assetsPath = path.join(__dirname, '../data/assets.json');
+    const assetsData = JSON.parse(fs.readFileSync(assetsPath, 'utf8'));
+    res.json(assetsData.playlist);
+  } catch (error) {
+    console.error('Error reading playlist:', error);
+    res.status(500).json({ error: 'Failed to load playlist' });
+  }
+});
+
+app.get('/api/current-state', (req, res) => {
+  res.json(currentState);
+});
+
+io.on('connection', (socket) => {
+  console.log('クライアント接続:', socket.id);
+
+  socket.emit('server:state', currentState);
+
+  socket.on('controller:set-current', (data) => {
+    console.log('アセット切替:', data.id);
+    currentState.currentAssetId = data.id;
+    currentState.isPlaying = false;
+    io.emit('server:state', currentState);
+  });
+
+  socket.on('controller:play', (data) => {
+    console.log('再生開始:', data.id);
+    currentState.isPlaying = true;
+    io.emit('server:state', currentState);
+  });
+
+  socket.on('controller:pause', (data) => {
+    console.log('一時停止:', data.id);
+    currentState.isPlaying = false;
+    io.emit('server:state', currentState);
+  });
+
+  socket.on('display:ready', () => {
+    console.log('表示画面準備完了');
+    socket.emit('server:state', currentState);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('クライアント切断:', socket.id);
+  });
+});
+
+server.listen(PORT, () => {
+  console.log(`サーバー起動: http://localhost:${PORT}`);
+});

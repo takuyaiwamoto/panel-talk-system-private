@@ -1,0 +1,72 @@
+{
+  "playlist": [
+    {
+      "id": "img-001",
+      "type": "image",
+      "title": "オープニングスライド",
+      "filename": "opening.jpg",
+      "thumbnail": "opening_thumb.jpg",
+      "description": "パネルディスカッション開始スライド"
+    },
+    {
+      "id": "video-001", 
+      "type": "video",
+      "title": "紹介ビデオ",
+      "filename": "intro.mp4",
+      "thumbnail": "intro_thumb.jpg",
+      "description": "パネリスト紹介ビデオ",
+      "duration": 120
+    },
+    {
+      "id": "youtube-001",
+      "type": "youtube",
+      "title": "基調講演ダイジェスト",
+      "videoId": "jNQXAC9IVRw",
+      "thumbnail": "youtube_thumb.jpg",
+      "description": "基調講演のハイライト",
+      "duration": 180
+    },
+    {
+      "id": "img-002",
+      "type": "image", 
+      "title": "質疑応答",
+      "filename": "qa.png",
+      "thumbnail": "qa_thumb.png",
+      "description": "質疑応答セクション"
+    },
+    {
+      "id": "video-002",
+      "type": "video",
+      "title": "ディスカッション映像",
+      "filename": "discussion.mp4", 
+      "thumbnail": "discussion_thumb.jpg",
+      "description": "パネリスト間の議論",
+      "duration": 300
+    },
+    {
+      "id": "img-003",
+      "type": "image",
+      "title": "クロージング",
+      "filename": "closing.jpg",
+      "thumbnail": "closing_thumb.jpg",
+      "description": "終了スライド"
+    },
+    {
+      "id": "img-004",
+      "type": "image",
+      "title": "スライド1",
+      "filename": "slide1.png",
+      "thumbnail": "slide1.png",
+      "description": "新しく追加されたスライド"
+    },
+    {
+      "id": "youtube-002",
+      "type": "youtube",
+      "title": "新しいYouTube動画",
+      "videoId": "YOUR_VIDEO_ID_HERE",
+      "thumbnail": "youtube_thumb.jpg",
+      "description": "新しく追加されたYouTube動画",
+      "duration": 180
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "panel-talk-system",
+  "version": "1.0.0",
+  "description": "学会パネルトーク向けブラウザベースシステム",
+  "scripts": {
+    "install-all": "cd server && npm install && cd ../client && npm install && cd ../display-app && npm install",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "display": "cd display-app && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev-full": "concurrently \"npm run server\" \"npm run client\" \"npm run display\"",
+    "build": "cd client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
