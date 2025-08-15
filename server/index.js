@@ -27,6 +27,17 @@ app.use(cors());
 app.use(express.json());
 app.use('/assets', express.static(path.join(__dirname, '../assets')));
 
+// 操作画面の静的ファイル配信
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// SPAルーティング対応
+app.get('*', (req, res) => {
+  // APIやassetsでない場合は操作画面を返す
+  if (!req.path.startsWith('/api') && !req.path.startsWith('/assets') && !req.path.startsWith('/socket.io')) {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  }
+});
+
 let currentState = {
   currentAssetId: null,
   isPlaying: false
@@ -92,6 +103,7 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`サーバー起動: http://localhost:${PORT}`);
+  console.log(`外部アクセス: http://YOUR_IP_ADDRESS:${PORT}`);
 });
