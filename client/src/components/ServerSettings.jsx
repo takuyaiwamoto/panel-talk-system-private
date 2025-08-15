@@ -17,10 +17,11 @@ function ServerSettings({ onConnect, isConnected }) {
   const handleConnect = () => {
     if (!serverUrl) return
     
-    // URLを正規化
-    const normalizedUrl = serverUrl.startsWith('http') 
-      ? serverUrl 
-      : `http://${serverUrl}`
+    // スペースを除去してURLを正規化
+    const cleanUrl = serverUrl.trim()
+    const normalizedUrl = cleanUrl.startsWith('http') 
+      ? cleanUrl 
+      : `http://${cleanUrl}`
     
     // ポート番号がない場合は3001を追加
     const finalUrl = normalizedUrl.includes(':3001') 
